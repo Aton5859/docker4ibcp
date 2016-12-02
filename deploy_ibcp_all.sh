@@ -81,7 +81,7 @@ while read file
     if [ -e "${DEPLOY_FOLDER}/lib/" ]
     then
 # 复制模块jar包到tomcat的lib目录
-      cp -n "${DEPLOY_FOLDER}/webapps/${folder}/WEB-INF/lib/"*.jar "${DEPLOY_FOLDER}/lib/";
+      cp -f "${DEPLOY_FOLDER}/webapps/${folder}/WEB-INF/lib/"*.jar "${DEPLOY_FOLDER}/lib/";
 # 清除tomcat的lib已经存在的jar包
       rm -f "${DEPLOY_FOLDER}/webapps/${folder}/WEB-INF/lib/"*.jar;
     fi;
