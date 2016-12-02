@@ -24,6 +24,7 @@ ARG IBCP_PACKAGE_TOOLS=./ibcp_tools
 ENV \
 # ibcp目录
     IBCP_HOME=/srv/ibcp \
+ENV \
 # ibcp配置目录
     IBCP_CONF=${IBCP_HOME}/conf \
 # ibcp数据目录
