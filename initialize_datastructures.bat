@@ -69,7 +69,7 @@ goto :EOF
 REM 函数，创建数据结构。参数1，使用的jar包
 :CREATE_DS
   SET JarFile=%1
-  SET COMMOND=java -Djava.ext.dirs=%TOOLS_FOLDER%lib\ -jar^
+  SET COMMOND=java -Djava.ext.dirs=%TOOLS_FOLDER%lib -jar^
     "%TOOLS_TRANSFORM%" dsJar^
     -DsTemplate=ds_%MasterDbType%_ibas_classic.xml^
     -JarFile="%JarFile%"^
