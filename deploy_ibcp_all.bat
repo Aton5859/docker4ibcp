@@ -11,11 +11,14 @@ echo     3. 参数2，IBCP部署目录。
 echo     4. 参数3，IBCP数据目录。
 echo     5. 参数4，IBCP共享库目录。
 echo *****************************************************************
+SET h=%time:~0,2%
+SET hh=%h: =0%
+SET DATE_NAME=%date:~0,4%%date:~5,2%%date:~8,2%_%hh%%time:~3,2%%time:~6,2%
 REM 设置参数变量
 SET WORK_FOLDER=%~dp0
 REM 设置package_folder目录
 SET PACKAGE_FOLDER=%~1
-if "%PACKAGE_FOLDER%" equ "" SET PACKAGE_FOLDER=%WORK_FOLDER%ibcp_packages\latest\
+if "%PACKAGE_FOLDER%" equ "" SET PACKAGE_FOLDER=%WORK_FOLDER%ibcp_packages\%DATE_NAME%\
 REM 设置deploy_folder目录
 SET DEPLOY_FOLDER=%~2
 if "%DEPLOY_FOLDER%" equ "" SET DEPLOY_FOLDER=%WORK_FOLDER%webapps\
@@ -37,6 +40,19 @@ if not exist "%IBCP_DATA%" mkdir "%IBCP_DATA%"
 REM ibcp日志目录
 SET IBCP_LOG=%IBCP_HOME%log\
 if not exist "%IBCP_LOG%" mkdir "%IBCP_LOG%"
+REM 程序包-发布服务地址
+SET IBCP_PACKAGE_URL=http://ibas.club:8866/ibcp
+REM 程序包-发布服务用户名
+SET IBCP_PACKAGE_USER=avatech\amber
+REM 程序包-发布服务用户密码
+SET IBCP_PACKAGE_PASSWORD=Aa123456
+REM 程序包-版本路径
+SET IBCP_PACKAGE_VERSION=latest
+
+REM 下载ibcp程序
+echo 开始下载模块，从%IBCP_PACKAGE_URL%/%IBCP_PACKAGE_VERSION%/
+if not exist "%PACKAGE_FOLDER%" mkdir "%PACKAGE_FOLDER%" 
+wget -r -np -nd -nv --http-user=%IBCP_PACKAGE_USER% --http-password=%IBCP_PACKAGE_PASSWORD% -P %PACKAGE_FOLDER% %IBCP_PACKAGE_URL%/%IBCP_PACKAGE_VERSION%/
 
 echo 开始解压[%PACKAGE_FOLDER%]的war包
 REM 开始发布当前版本

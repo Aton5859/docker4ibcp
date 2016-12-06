@@ -9,12 +9,13 @@
 * 国籍：NA
 
 ### 使用说明 | instructions
-* build_dockerfile4all.sh            使用dockerfile4all创建容器镜像，且拷贝ibcp.app.xml，ibcp.service_routing.xml到容器的ibcp配置目录。
-* deploy_ibcp_all.sh                 下载并部署ibcp全部模块。
-* initialize_datastructures.sh       初始化数据结构。
+* build_dockerfile4all.sh                 使用dockerfile4all创建容器镜像，且拷贝ibcp.app.xml，ibcp.service_routing.xml到容器的ibcp配置目录。
+* deploy_ibcp_all.sh/.bat                 下载并部署ibcp全部模块。
+* initialize_datastructures.sh            初始化数据结构。
 * 使用时注意提前修改配置文件内容。
 * 测试环境时，配置文件中涉及的主机，建议修改本机host文件指向。
 * 脚本中使用了额外文件作为初始化顺序说明。
+* Windows环境下需要解压[wget](https://github.com/niurenzhu/docker4ibcp/blob/master/wget-win32.zip)并配置到PATH。
 
 ### 启动 | running
 * docker run --name ibcp-srv-db -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=1q2w3e mysql:5.7          启动MYSQL容器
