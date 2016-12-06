@@ -68,19 +68,19 @@ if exist "%PACKAGE_FOLDER%%%m" (
 REM 删除配置文件，并统一到IBCP_CONF目录
   if exist "%DEPLOY_FOLDER%!name!\WEB-INF\app.xml" (
     del /q "%DEPLOY_FOLDER%!name!\WEB-INF\app.xml"
-    mklink "%DEPLOY_FOLDER%!name!\WEB-INF\app.xml" "%IBCP_CONF%app.xml"
   )
+  mklink "%DEPLOY_FOLDER%!name!\WEB-INF\app.xml" "%IBCP_CONF%app.xml"
 REM 删除路由文件，并统一到IBCP_CONF目录
   if exist "%DEPLOY_FOLDER%!name!\WEB-INF\service_routing.xml" (
     del /q "%DEPLOY_FOLDER%!name!\WEB-INF\service_routing.xml"
-    mklink "%DEPLOY_FOLDER%!name!\WEB-INF\service_routing.xml" "%IBCP_CONF%service_routing.xml"
   )
+  mklink "%DEPLOY_FOLDER%!name!\WEB-INF\service_routing.xml" "%IBCP_CONF%service_routing.xml"
 REM 统一日志目录到IBCP_LOG目录
   if not exist "%DEPLOY_FOLDER%!name!\WEB-INF\log" (
     mklink /d "%DEPLOY_FOLDER%!name!\WEB-INF\log" "%IBCP_LOG%"
   )
 REM 统一lib目录到运行目录
-  if exist "%DEPLOY_FOLDER%!name!\WEB-INF\lib" (
+  if exist "%DEPLOY_FOLDER%!name!\WEB-INF\lib\*.jar" (
     copy /y "%DEPLOY_FOLDER%!name!\WEB-INF\lib\*.jar" "%IBCP_LIB%"
     del /q "%DEPLOY_FOLDER%!name!\WEB-INF\lib\*.jar"
   )
