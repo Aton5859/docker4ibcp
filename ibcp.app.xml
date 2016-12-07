@@ -20,7 +20,7 @@
     <add key="OrganizationWay" value="ibcp" />
     <!-- 配置项目-权限判断方式 -->
     <add key="OwnershipWay" value="ibcp" />
-    <!-- 配置项目-日志输出级别 -->
-    <add key="MsgLevel" value="INFO" />
+    <!--配置项目-JSON序列化实现 -->
+    <add key="Serializer" value="jersey" />
   </appSettings>
 </ns2:configuration>

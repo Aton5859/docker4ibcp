@@ -39,7 +39,10 @@ RUN mkdir -p "${IBCP_PACKAGE_DOWNLOAD}"; \
     mkdir -p "${IBCP_PACKAGE_TOOLS}"; \
     mkdir -p "${IBCP_CONF}"; \
     mkdir -p "${IBCP_DATA}"; \
-    mkdir -p "${IBCP_LOG}"; \
+    mkdir -p "${IBCP_LOG}";
+
+# 清理TOMCAT自带网站
+RUN rm -rf "${CATALINA_HOME}/webapps"; \
     mkdir -p "${CATALINA_HOME}/webapps";
 
 # 部署ibcp程序
@@ -94,6 +97,7 @@ RUN set -x \
 COPY "ibcp.app.xml" "${IBCP_CONF}/app.xml"
 COPY "ibcp.service_routing.xml" "${IBCP_CONF}/service_routing.xml"
 COPY "ibcp.catalina.properties" "${CATALINA_HOME}/conf/catalina.properties"
+# COPY "ibcp.server.xml" "${CATALINA_HOME}/conf/server.xml"
 # 拷贝工具文件
 COPY "initialize_datastructures.sh" "${IBCP_PACKAGE_TOOLS}/"
 ADD "btulz.transforms.tar" "${IBCP_PACKAGE_TOOLS}/"
