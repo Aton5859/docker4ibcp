@@ -6,5 +6,7 @@ temp
 LICENSE
 README.md
 encourager.gif
+*.bat
 build_dockerfile4all.sh
 deploy_ibcp_all.sh
+wget-win32.zip
