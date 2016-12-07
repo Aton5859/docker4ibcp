@@ -93,6 +93,7 @@ RUN set -x \
 # 拷贝配置文件
 COPY "ibcp.app.xml" "${IBCP_CONF}/app.xml"
 COPY "ibcp.service_routing.xml" "${IBCP_CONF}/service_routing.xml"
+COPY "ibcp.catalina.properties" "${CATALINA_HOME}/conf/catalina.properties"
 # 拷贝工具文件
 COPY "initialize_datastructures.sh" "${IBCP_PACKAGE_TOOLS}/"
 ADD "btulz.transforms.tar" "${IBCP_PACKAGE_TOOLS}/"
