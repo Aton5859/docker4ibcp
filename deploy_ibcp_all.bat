@@ -6,10 +6,12 @@ echo                by niuren.zhu
 echo                           2016.12.02
 echo  说明：
 echo     1. 部署war到部署目录，需要以管理员权限启动。
-echo     2. 参数1，IBCP的war包位置。
-echo     3. 参数2，IBCP部署目录。
-echo     4. 参数3，IBCP数据目录。
-echo     5. 参数4，IBCP共享库目录。
+echo     2. 参数1，IBCP的包位置，默认.\ibcp_packages。
+echo     3. 参数2，IBCP部署目录，默认.\webapps。
+echo     4. 参数3，IBCP数据目录，默认.\ibcp。
+echo     5. 参数4，IBCP共享库目录，默认.\lib。
+echo     6. 脚本通文件链接方式，集中配置文件和日志目录到IBCP_HOME下。
+echo     7. 提前下载并配置wget到PATH变量。
 echo *****************************************************************
 SET h=%time:~0,2%
 SET hh=%h: =0%
@@ -17,19 +19,15 @@ SET DATE_NAME=%date:~0,4%%date:~5,2%%date:~8,2%_%hh%%time:~3,2%%time:~6,2%
 REM 设置参数变量
 SET WORK_FOLDER=%~dp0
 REM 设置package_folder目录
-SET PACKAGE_FOLDER=%~1
+SET PACKAGE_FOLDER=%1
 if "%PACKAGE_FOLDER%" equ "" SET PACKAGE_FOLDER=%WORK_FOLDER%ibcp_packages\%DATE_NAME%\
 REM 设置deploy_folder目录
-SET DEPLOY_FOLDER=%~2
+SET DEPLOY_FOLDER=%2
 if "%DEPLOY_FOLDER%" equ "" SET DEPLOY_FOLDER=%WORK_FOLDER%webapps\
 if not exist "%DEPLOY_FOLDER%" mkdir "%DEPLOY_FOLDER%"
 REM 设置ibcp目录
-SET IBCP_HOME=%~3
+SET IBCP_HOME=%3
 if "%IBCP_HOME%" equ "" SET IBCP_HOME=%WORK_FOLDER%ibcp\
-if not exist "%IBCP_HOME%" mkdir "%IBCP_HOME%"
-REM 设置lib目录
-SET IBCP_LIB=%~4
-if "%IBCP_LIB%" equ "" SET IBCP_LIB=%WORK_FOLDER%lib\
 if not exist "%IBCP_HOME%" mkdir "%IBCP_HOME%"
 REM ibcp配置目录
 SET IBCP_CONF=%IBCP_HOME%conf\
@@ -40,6 +38,10 @@ if not exist "%IBCP_DATA%" mkdir "%IBCP_DATA%"
 REM ibcp日志目录
 SET IBCP_LOG=%IBCP_HOME%log\
 if not exist "%IBCP_LOG%" mkdir "%IBCP_LOG%"
+REM 设置lib目录
+SET IBCP_LIB=%4
+if "%IBCP_LIB%" equ "" SET IBCP_LIB=%WORK_FOLDER%lib\
+if not exist "%IBCP_LIB%" mkdir "%IBCP_LIB%"
 REM 程序包-发布服务地址
 SET IBCP_PACKAGE_URL=http://ibas.club:8866/ibcp
 REM 程序包-发布服务用户名
@@ -91,3 +93,4 @@ REM 统一lib目录到运行目录
   )
 )
 )
+echo 操作完成

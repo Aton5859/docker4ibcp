@@ -10,6 +10,7 @@ echo '    3. 参数2，数据目录，各个模块数据及配置文件集中映
 echo '    4. 脚本用到unzip命令，请提前安装。                                      '
 echo '    5. /ibcp_packages为下载模块目录，请手工清除。                           '
 echo '    6. /webapps/ibcp.release记录所以释放的文件夹名称。                      '
+echo '    7. 脚本通过文件链接集中配置文件和日志目录到IBCP_HOME目录。              '
 echo '****************************************************************************'
 # 定义变量
 # 释放的目录
@@ -28,12 +29,14 @@ IBCP_PACKAGE_PASSWORD=Aa123456
 IBCP_PACKAGE_VERSION=latest
 # 程序包-下载目录
 IBCP_PACKAGE_DOWNLOAD=${IBCP_WORK_FOLDER}/ibcp_packages/$(date +%s)
+# ibcp目录
+IBCP_HOME=${IBCP_WORK_FOLDER}/ibcp
 # ibcp配置目录
-IBCP_CONF=${IBCP_WORK_FOLDER}/ibcp/conf
+IBCP_CONF=${IBCP_HOME}/conf
 # ibcp数据目录
-IBCP_DATA=${IBCP_WORK_FOLDER}/ibcp/data
+IBCP_DATA=${IBCP_HOME}/data
 # ibcp日志目录
-IBCP_LOG=${IBCP_WORK_FOLDER}/ibcp/log
+IBCP_LOG=${IBCP_HOME}/log
 
 # 初始化环境
 mkdir -p "${IBCP_PACKAGE_DOWNLOAD}"

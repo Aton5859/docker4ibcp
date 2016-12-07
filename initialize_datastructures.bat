@@ -5,11 +5,10 @@ echo      initialize_datastructures.bat
 echo                by niuren.zhu
 echo                           2016.12.06
 echo  说明：
-echo     1. 分析jar包并创建数据结构。
-echo     2. 参数1，IBCP的war包位置。
-echo     3. 参数2，IBCP部署目录。
-echo     4. 参数3，IBCP数据目录。
-echo     5. 参数4，IBCP共享库目录。
+echo     1. 分析jar包并创建数据结构，数据库信息取值app.xml。
+echo     2. 参数1，待分析的目录，默认.\webapps。
+echo     3. 提前下载btulz.transforms并放置.\ibcp_tools\目录。
+echo     4. 提前配置app.xml的数据库信息。
 echo *****************************************************************
 REM 检查JAVA运行环境
 SET h=%time:~0,2%
@@ -25,7 +24,7 @@ if not exist "%TOOLS_TRANSFORM%" (
   goto :EOF
 )
 REM 设置deploy_folder目录
-SET DEPLOY_FOLDER=%~2
+SET DEPLOY_FOLDER=%1
 if "%DEPLOY_FOLDER%" equ "" SET DEPLOY_FOLDER=%WORK_FOLDER%webapps\
 if not exist "%DEPLOY_FOLDER%" (
   echo not found webapps.
@@ -64,6 +63,7 @@ for %%f in (%WORK_FOLDER%lib\!jar!) DO (
 ))
 echo --
 )
+echo 操作完成
 
 goto :EOF
 REM 函数，创建数据结构。参数1，分析的jar包

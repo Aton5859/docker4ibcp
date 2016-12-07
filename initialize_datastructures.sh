@@ -1,12 +1,12 @@
 #!/bin/bash
 echo '****************************************************************************'
-echo '     initialize_datastructures.sh                     '
-echo '            by niuren.zhu                     '
-echo '               2016.10.26                     '
-echo '  说明：                                  '
-echo '  1. 遍历目录WEB_INF/lib/ibcp.*.jar包，通过btulz创建数据结构。      '
-echo '  2. 数据库的配置信息读自各个模块的app.xml。                '
-echo '  3. 参数1，工作目录，如：tomcat/webapps/。                 '
+echo '     initialize_datastructures.sh                                           '
+echo '            by niuren.zhu                                                   '
+echo '               2016.10.26                                                   '
+echo '  说明：                                                                    '
+echo '  1. 遍历目录WEB_INF/lib/ibcp.*.jar包，通过btulz创建数据结构。              '
+echo '  2. 数据库的配置信息读自各个模块的app.xml。                                '
+echo '  3. 参数1，工作目录，如：tomcat/webapps/。                                 '
 echo '****************************************************************************'
 # 检查JAVA运行环境
 if [ ! -e "${JAVA_HOME}/bin/java" ];then
