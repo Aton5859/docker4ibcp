@@ -5,7 +5,7 @@ echo      deploy_ibcp_all.bat
 echo                by niuren.zhu
 echo                           2016.12.02
 echo  说明：
-echo     1. 部署war到部署目录。
+echo     1. 部署war到部署目录，需要以管理员权限启动。
 echo     2. 参数1，IBCP的war包位置。
 echo     3. 参数2，IBCP部署目录。
 echo     4. 参数3，IBCP数据目录。

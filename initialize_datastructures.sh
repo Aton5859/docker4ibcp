@@ -86,8 +86,8 @@ function createDS()
 {
 # 参数1，使用的jar包
   JarFile=$1;
-  COMMOND="java -Djava.ext.dirs=${TOOLS_FOLDER}/lib -jar \
-    ${TOOLS_TRANSFORM} dsJar \
+  COMMOND="java \
+    -jar ${TOOLS_TRANSFORM} dsJar \
     -DsTemplate=ds_${MasterDbType}_ibas_classic.xml \
     -JarFile=${JarFile} \
     -SqlFilter=sql_${MasterDbType} \

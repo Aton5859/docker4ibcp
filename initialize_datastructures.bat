@@ -66,11 +66,11 @@ echo --
 )
 
 goto :EOF
-REM 函数，创建数据结构。参数1，使用的jar包
+REM 函数，创建数据结构。参数1，分析的jar包
 :CREATE_DS
   SET JarFile=%1
-  SET COMMOND=java -Djava.ext.dirs=%TOOLS_FOLDER%lib -jar^
-    "%TOOLS_TRANSFORM%" dsJar^
+  SET COMMOND=java ^
+    -jar "%TOOLS_TRANSFORM%" dsJar^
     -DsTemplate=ds_%MasterDbType%_ibas_classic.xml^
     -JarFile="%JarFile%"^
     -SqlFilter=sql_%MasterDbType%^
@@ -97,22 +97,44 @@ REM 函数，读取配置文件。参数1，使用的配置文件
       )
     )
   )
+REM 调整变量大小写
+  call :TO_LOWERCASE MasterDbType
 REM 数据库架构修正
-  if "%MasterDbType%" equ "MSSQL" (
+  if "%MasterDbType%" equ "mssql" (
     SET MasterDbSchema=dbo
   ) else (
     SET MasterDbSchema=
   )
 REM 数据库端口修正
-  if "%MasterDbType%" equ "MSSQL" SET MasterDbPort=1433
-  if "%MasterDbType%" equ "MYSQL" SET MasterDbPort=3306
-  if "%MasterDbType%" equ "PGSQL" SET MasterDbPort=5432
-  if "%MasterDbType%" equ "HANA" SET MasterDbPort=30015
+  if "%MasterDbType%" equ "mssql" SET MasterDbPort=1433
+  if "%MasterDbType%" equ "mysql" SET MasterDbPort=3306
+  if "%MasterDbType%" equ "pgsql" SET MasterDbPort=5432
+  if "%MasterDbType%" equ "hana" SET MasterDbPort=30015
 goto :EOF
-REM 函数，去除空格及制表符。参数1，处理的字符
+REM 函数，去除空格及制表符。参数1，处理的变量名
 :TRIM
 if "!%1:~0,1!"==" " (set %1=!%1:~1!&&goto TRIM)
 if "!%1:~0,1!"=="	" (set %1=!%1:~1!&&goto TRIM)
 if "!%1:~-1!"==" " (set %1=!%1:~0,-1!&&goto TRIM)
 if "!%1:~-1!"=="	" (set %1=!%1:~0,-1!&&goto TRIM)
+goto :EOF
+REM 函数，大写字母转小写。参数1，处理的变量名
+:TO_UPPERCASE
+  SET "UP=A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+  SET #=%1
+  SET VALUE=!%#%!
+  IF DEFINED # (
+    FOR %%A IN (%UP%) DO SET VALUE=!VALUE:%%A=%%A!
+  )
+  SET %#%=%VALUE%
+goto :EOF
+REM 函数，小写字母转大写。参数1，处理的变量名
+:TO_LOWERCASE
+  SET "DOWN=a b c d e f g h i j k l m n o p q r s t u v w x y z"
+  SET #=%1
+  SET VALUE=!%#%!
+  IF DEFINED # (
+    FOR %%A IN (%DOWN%) DO SET VALUE=!VALUE:%%A=%%A!
+  )
+  SET %#%=%VALUE%
 goto :EOF
