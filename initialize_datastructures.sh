@@ -4,26 +4,31 @@ echo '     initialize_datastructures.sh                                         
 echo '            by niuren.zhu                                                   '
 echo '               2016.10.26                                                   '
 echo '  说明：                                                                    '
-echo '  1. 遍历目录WEB_INF/lib/ibcp.*.jar包，通过btulz创建数据结构。              '
-echo '  2. 数据库的配置信息读自各个模块的app.xml。                                '
-echo '  3. 参数1，工作目录，如：tomcat/webapps/。                                 '
+echo '    1. 分析jar包并创建数据结构，数据库信息取值app.xml。                     '
+echo '    2. 参数1，待分析的目录，默认.\webapps。                                 '
+echo '    3. 参数2，共享库目录，默认.\ibcp_lib。                                  '
+echo '    4. 提前下载btulz.transforms并放置.\ibcp_tools\目录。                    '
+echo '    5. 提前配置app.xml的数据库信息。                                        '
 echo '****************************************************************************'
-# 检查JAVA运行环境
-if [ ! -e "${JAVA_HOME}/bin/java" ];then
-  echo not found java.
-  exit 1
-fi;
-# 定义变量
-# ibcp释放目录
-DEPLOY_FOLDER=$1
-# ibcp工具目录,脚本所在目录
-TOOLS_FOLDER=$(echo `dirname $0`)
+# 设置参数变量
+WORK_FOLDER=$PWD
+# 设置ibcp_tools目录
+TOOLS_FOLDER=${WORK_FOLDER}/ibcp_tools
 TOOLS_TRANSFORM=${TOOLS_FOLDER}/btulz.transforms.core-0.1.0.jar
-# 判断工具是否存在
 if [ ! -e "${TOOLS_TRANSFORM}" ];then
-  echo not found btulz.transforms, in [${TOOLS_TRANSFORM}].
+  echo not found btulz.transforms, in [${TOOLS_FOLDER}].
   exit 1
 fi;
+# 设置DEPLOY目录
+IBCP_DEPLOY=$1
+if [ "${IBCP_DEPLOY}" == "" ];then IBCP_DEPLOY=${WORK_FOLDER}/webapps; fi;
+if [ ! -e "${IBCP_DEPLOY}" ];then
+  echo not found webapps.
+  exit 1;
+fi;
+# 设置LIB目录
+IBCP_LIB=$2
+if [ "${IBCP_LIB}" == "" ];then IBCP_LIB=${WORK_FOLDER}/ibcp_lib; fi;
 
 # 数据库信息
 CompanyId=CC
@@ -34,6 +39,14 @@ MasterDbSchema=
 MasterDbName=
 MasterDbUserID=
 MasterDbUserPassword=
+
+# 显示参数信息
+echo ----------------------------------------------------
+echo 工具地址：${TOOLS_TRANSFORM}
+echo 部署目录：${IBCP_DEPLOY}
+echo 共享目录：${IBCP_LIB}
+echo ----------------------------------------------------
+
 # 获取属性值
 function getAttr()  
 {  
@@ -100,48 +113,42 @@ function createDS()
     -DbPassword=${MasterDbUserPassword};"
   echo exec: ${COMMOND};
   eval $(echo ${COMMOND});
-} 
-# 未提供工作目录，尝试取tomcat/webapps/目录
-if [ "${DEPLOY_FOLDER}" == "" ];then
-  if [ "${CATALINA_HOME}" != "" ];then DEPLOY_FOLDER=${CATALINA_HOME}/webapps; fi;  
-fi;
-# 没有目录则使用当前目录
-if [ "${DEPLOY_FOLDER}" == "" ];then DEPLOY_FOLDER=$PWD; fi;
+}
 
-echo 开始分析${DEPLOY_FOLDER}目录下数据
+echo 开始分析${IBCP_DEPLOY}目录下数据
 # 检查是否存在模块说明文件，此文件描述模块初始化顺序。
-if [ ! -e "${DEPLOY_FOLDER}/ibcp.release.txt" ]
+if [ ! -e "${IBCP_DEPLOY}/ibcp.release.txt" ]
 then
-  ls -l "${DEPLOY_FOLDER}" | awk '/^d/{print $NF}' > "${DEPLOY_FOLDER}/ibcp.release.txt"
+  ls -l "${IBCP_DEPLOY}" | awk '/^d/{print $NF}' > "${IBCP_DEPLOY}/ibcp.release.txt"
 fi
 while read folder
 do
   echo --${folder}
 # 读取配置信息，用配置文件刷新变量
-    FILE_APP=${DEPLOY_FOLDER}/${folder}/WEB-INF/app.xml
+    FILE_APP=${IBCP_DEPLOY}/${folder}/WEB-INF/app.xml
     if [ -e "${FILE_APP}" ]; then
       getConfigValue ${FILE_APP};
     fi;
 # 使用模块目录jar包
-    if [ -e "${DEPLOY_FOLDER}/${folder}/WEB-INF/lib" ]
+    if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/lib" ]
     then
-      for file in `ls "${DEPLOY_FOLDER}/${folder}/WEB-INF/lib" | grep ibcp\.${folder}\-.`
+      for file in `ls "${IBCP_DEPLOY}/${folder}/WEB-INF/lib" | grep ibcp\.${folder}\-.`
       do
         echo ----${file}
-        createDS ${DEPLOY_FOLDER}/${folder}/WEB-INF/lib/${file};      
+        createDS ${IBCP_DEPLOY}/${folder}/WEB-INF/lib/${file};      
         echo ----
       done
     fi;
 # 使用共享目录jar包
-    if [ -e "${CATALINA_HOME}/lib" ]
+    if [ -e "${IBCP_LIB}" ]
     then
-      for file in `ls "${CATALINA_HOME}/lib" | grep ibcp\.${folder}\-.`
+      for file in `ls "${IBCP_LIB}" | grep ibcp\.${folder}\-.`
       do
         echo ----${file}
-        createDS ${CATALINA_HOME}/lib/${file};      
+        createDS ${IBCP_LIB}/${file};      
         echo ----
       done
     fi;
     echo --
-  done < "${DEPLOY_FOLDER}/ibcp.release.txt" | sed 's/\r//g'
+  done < "${IBCP_DEPLOY}/ibcp.release.txt" | sed 's/\r//g'
 echo 操作完成

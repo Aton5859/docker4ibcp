@@ -31,19 +31,25 @@ ENV \
     IBCP_DATA=${IBCP_HOME}/data \
 # ibcp日志目录
     IBCP_LOG=${IBCP_HOME}/log
+ENV \
+# ibcp共享目录
+    IBCP_LIB=${CATALINA_HOME}/ibcp_lib \
+# ibcp部署目录
+    IBCP_DEPLOY=${CATALINA_HOME}/webapps
 # 其他使用的环境变量
 # CATALINA_HOME，tomcat目录
 
 # 创建数据文件夹
 RUN mkdir -p "${IBCP_PACKAGE_DOWNLOAD}"; \
     mkdir -p "${IBCP_PACKAGE_TOOLS}"; \
+    mkdir -p "${IBCP_LIB}"; \
     mkdir -p "${IBCP_CONF}"; \
     mkdir -p "${IBCP_DATA}"; \
     mkdir -p "${IBCP_LOG}";
 
 # 清理TOMCAT自带网站
-RUN rm -rf "${CATALINA_HOME}/webapps"; \
-    mkdir -p "${CATALINA_HOME}/webapps";
+RUN rm -rf "${IBCP_DEPLOY}"; \
+    mkdir -p "${IBCP_DEPLOY}";
 
 # 部署ibcp程序
 RUN set -x \
@@ -62,32 +68,32 @@ RUN set -x \
          folder=${file##*ibcp.}; \
          folder=${folder%%.service*}; \
 # 记录释放的目录到ibcp.release.txt
-         if [ ! -e "${CATALINA_HOME}/webapps/ibcp.release.txt" ]; then :>"${CATALINA_HOME}/webapps/ibcp.release.txt"; fi; \
-         grep -q ${folder} "${DEPLOY_FOLDER}/webapps/ibcp.release.txt" || echo "${folder}" >>"${CATALINA_HOME}/webapps/ibcp.release.txt"; \
+         if [ ! -e "${IBCP_DEPLOY}/ibcp.release.txt" ]; then :>"${IBCP_DEPLOY}/ibcp.release.txt"; fi; \
+         grep -q ${folder} "${IBCP_DEPLOY}/ibcp.release.txt" || echo "${folder}" >>"${IBCP_DEPLOY}/ibcp.release.txt"; \
 # 解压war包到tomcat目录，WEB-INF*表示仅解压此目录
-#        unzip -o "${IBCP_PACKAGE_DOWNLOAD}/${file}" WEB-INF* -d "${CATALINA_HOME}/webapps/${folder}"; \
-         unzip -o "${IBCP_PACKAGE_DOWNLOAD}/${file}" -d "${CATALINA_HOME}/webapps/${folder}"; \
+#        unzip -o "${IBCP_PACKAGE_DOWNLOAD}/${file}" WEB-INF* -d "${IBCP_DEPLOY}/${folder}"; \
+         unzip -o "${IBCP_PACKAGE_DOWNLOAD}/${file}" -d "${IBCP_DEPLOY}/${folder}"; \
 # 删除配置文件，并映射到统一位置
-         if [ -e "${CATALINA_HOME}/webapps/${folder}/WEB-INF/app.xml" ]; then \
-           if [ ! -e "${IBCP_CONF}/app.xml" ]; then cp -f "${CATALINA_HOME}/webapps/${folder}/WEB-INF/app.xml" "${IBCP_CONF}/app.xml"; fi; \
-           rm -f "${CATALINA_HOME}/webapps/${folder}/WEB-INF/app.xml"; \
-           ln -s "${IBCP_CONF}/app.xml" "${CATALINA_HOME}/webapps/${folder}/WEB-INF/app.xml"; \
+         if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/app.xml" ]; then \
+           if [ ! -e "${IBCP_CONF}/app.xml" ]; then cp -f "${IBCP_DEPLOY}/${folder}/WEB-INF/app.xml" "${IBCP_CONF}/app.xml"; fi; \
+           rm -f "${IBCP_DEPLOY}/${folder}/WEB-INF/app.xml"; \
+           ln -s "${IBCP_CONF}/app.xml" "${IBCP_DEPLOY}/${folder}/WEB-INF/app.xml"; \
          fi; \
 # 删除服务路由文件，并映射到统一位置
-         if [ -e "${CATALINA_HOME}/webapps/${folder}/WEB-INF/service_routing.xml" ]; then \
-           if [ ! -e "${IBCP_CONF}/service_routing.xml" ]; then cp -f "${CATALINA_HOME}/webapps/${folder}/WEB-INF/service_routing.xml" "${IBCP_CONF}/service_routing.xml"; fi; \
-           rm -f "${CATALINA_HOME}/webapps/${folder}/WEB-INF/service_routing.xml"; \
-           ln -s "${IBCP_CONF}/service_routing.xml" "${CATALINA_HOME}/webapps/${folder}/WEB-INF/service_routing.xml"; \
+         if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/service_routing.xml" ]; then \
+           if [ ! -e "${IBCP_CONF}/service_routing.xml" ]; then cp -f "${IBCP_DEPLOY}/${folder}/WEB-INF/service_routing.xml" "${IBCP_CONF}/service_routing.xml"; fi; \
+           rm -f "${IBCP_DEPLOY}/${folder}/WEB-INF/service_routing.xml"; \
+           ln -s "${IBCP_CONF}/service_routing.xml" "${IBCP_DEPLOY}/${folder}/WEB-INF/service_routing.xml"; \
          fi; \
 # 映射日志文件夹到统一位置
-         if [ -e "${CATALINA_HOME}/webapps/${folder}/WEB-INF/log" ]; then rm -rf "${CATALINA_HOME}/webapps/${folder}/WEB-INF/log"; fi; \
-         ln -s -d "${IBCP_LOG}" "${CATALINA_HOME}/webapps/${folder}/WEB-INF/"; \
+         if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/log" ]; then rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF/log"; fi; \
+         ln -s -d "${IBCP_LOG}" "${IBCP_DEPLOY}/${folder}/WEB-INF/"; \
 # 集中共享jar包
-         if [ -e "${CATALINA_HOME}/lib/" ]; then \
-# 复制模块jar包到tomcat的lib目录
-           cp -n "${CATALINA_HOME}/webapps/${folder}/WEB-INF/lib/"*.jar "${CATALINA_HOME}/lib/"; \
+         if [ -e "${IBCP_LIB}" ]; then \
+# 复制模块jar包到ibcp共享目录
+           cp -n "${IBCP_DEPLOY}/${folder}/WEB-INF/lib/"*.jar "${IBCP_LIB}"; \
 # 清除tomcat的lib已经存在的jar包
-           rm -f "${CATALINA_HOME}/webapps/${folder}/WEB-INF/lib/"*.jar; \
+           rm -f "${IBCP_DEPLOY}/${folder}/WEB-INF/lib/"*.jar; \
          fi; \
        done < "${IBCP_PACKAGE_DOWNLOAD}/ibcp.deploy.order.txt" | sed 's/\r//g';) \
 # 删除下载的包

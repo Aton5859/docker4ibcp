@@ -7,8 +7,9 @@ echo                           2016.12.06
 echo  说明：
 echo     1. 分析jar包并创建数据结构，数据库信息取值app.xml。
 echo     2. 参数1，待分析的目录，默认.\webapps。
-echo     3. 提前下载btulz.transforms并放置.\ibcp_tools\目录。
-echo     4. 提前配置app.xml的数据库信息。
+echo     3. 参数2，共享库目录，默认.\ibcp_lib。
+echo     4. 提前下载btulz.transforms并放置.\ibcp_tools\目录。
+echo     5. 提前配置app.xml的数据库信息。
 echo *****************************************************************
 REM 检查JAVA运行环境
 SET h=%time:~0,2%
@@ -16,20 +17,24 @@ SET hh=%h: =0%
 SET DATE_NAME=%date:~0,4%%date:~5,2%%date:~8,2%_%hh%%time:~3,2%%time:~6,2%
 REM 设置参数变量
 SET WORK_FOLDER=%~dp0
-REM 设置ibcp_tools目录
+REM 设置TOOLS目录
 SET TOOLS_FOLDER=%WORK_FOLDER%ibcp_tools\
 SET TOOLS_TRANSFORM=%TOOLS_FOLDER%btulz.transforms.core-0.1.0.jar
 if not exist "%TOOLS_TRANSFORM%" (
   echo not found btulz.transforms.core.
   goto :EOF
 )
-REM 设置deploy_folder目录
-SET DEPLOY_FOLDER=%1
-if "%DEPLOY_FOLDER%" equ "" SET DEPLOY_FOLDER=%WORK_FOLDER%webapps\
-if not exist "%DEPLOY_FOLDER%" (
+REM 设置DEPLOY目录
+SET IBCP_DEPLOY=%1
+if "%IBCP_DEPLOY%" equ "" SET IBCP_DEPLOY=%WORK_FOLDER%webapps\
+if not exist "%IBCP_DEPLOY%" (
   echo not found webapps.
   goto :EOF
 )
+REM 设置LIB目录
+SET IBCP_LIB=%2
+if "%IBCP_LIB%" equ "" SET IBCP_LIB=%WORK_FOLDER%ibcp_lib\
+if not exist "%IBCP_LIB%" mkdir "%IBCP_LIB%"
 REM 数据库信息
 SET CompanyId=CC
 SET MasterDbType=mysql
@@ -40,25 +45,32 @@ SET MasterDbName=ibcp_demo
 SET MasterDbUserID=root
 SET MasterDbUserPassword=1q2w3e
 
-echo 开始分析[%DEPLOY_FOLDER%]目录
+REM 显示参数信息
+echo ----------------------------------------------------
+echo 工具地址：%TOOLS_TRANSFORM%
+echo 部署目录：%IBCP_DEPLOY%
+echo 共享目录：%IBCP_LIB%
+echo ----------------------------------------------------
+
+echo 开始分析[%IBCP_DEPLOY%]目录
 REM 开始发布当前版本
-if not exist "%DEPLOY_FOLDER%ibcp.release.txt" dir /D /B /A:D "%DEPLOY_FOLDER%" >"%DEPLOY_FOLDER%ibcp.release.txt"
-for /f %%m in (%DEPLOY_FOLDER%ibcp.release.txt) DO (
+if not exist "%IBCP_DEPLOY%ibcp.release.txt" dir /D /B /A:D "%IBCP_DEPLOY%" >"%IBCP_DEPLOY%ibcp.release.txt"
+for /f %%m in (%IBCP_DEPLOY%ibcp.release.txt) DO (
 echo --开始处理[%%m]
 SET module=%%m
 SET jar=ibcp.!module!-*.jar
-if exist "%DEPLOY_FOLDER%!module!\WEB-INF\app.xml" (
+if exist "%IBCP_DEPLOY%!module!\WEB-INF\app.xml" (
 echo ----读取配置文件[.\WEB-INF\app.xml]
-   call :LOAD_CONF "%DEPLOY_FOLDER%!module!\WEB-INF\app.xml"
+   call :LOAD_CONF "%IBCP_DEPLOY%!module!\WEB-INF\app.xml"
 )
-if exist "%DEPLOY_FOLDER%!module!\WEB-INF\lib\!jar!" (
+if exist "%IBCP_DEPLOY%!module!\WEB-INF\lib\!jar!" (
 echo ----开始处理[.\WEB-INF\lib\!jar!]
-for %%f in (%DEPLOY_FOLDER%!module!\WEB-INF\lib\!jar!) DO (
+for %%f in (%IBCP_DEPLOY%!module!\WEB-INF\lib\!jar!) DO (
    call :CREATE_DS %%f
 ))
-if exist "%WORK_FOLDER%lib\!jar!" (
-echo ----开始处理[.\lib\!jar!]
-for %%f in (%WORK_FOLDER%lib\!jar!) DO (
+if exist "%IBCP_LIB%!jar!" (
+echo ----开始处理[%IBCP_LIB%!jar!]
+for %%f in (%IBCP_LIB%!jar!) DO (
    call :CREATE_DS %%f
 ))
 echo --
