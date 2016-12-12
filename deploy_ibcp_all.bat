@@ -79,19 +79,22 @@ if exist "%IBCP_PACKAGE%%%m" (
   7z x "%IBCP_PACKAGE%%%m" -r -y -o"%IBCP_DEPLOY%!name!"
 REM 删除配置文件，并统一到IBCP_CONF目录
   if exist "%IBCP_DEPLOY%!name!\WEB-INF\app.xml" (
+    if not exist "%IBCP_CONF%app.xml" copy /y "%IBCP_DEPLOY%!name!\WEB-INF\app.xml" "%IBCP_CONF%app.xml"
     del /q "%IBCP_DEPLOY%!name!\WEB-INF\app.xml"
+    mklink "%IBCP_DEPLOY%!name!\WEB-INF\app.xml" "%IBCP_CONF%app.xml"
   )
-  mklink "%IBCP_DEPLOY%!name!\WEB-INF\app.xml" "%IBCP_CONF%app.xml"
 REM 删除路由文件，并统一到IBCP_CONF目录
   if exist "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml" (
+    if not exist "%IBCP_CONF%service_routing.xml" copy /y "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml" "%IBCP_CONF%service_routing.xml"
     del /q "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml"
+    mklink "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml" "%IBCP_CONF%service_routing.xml"
   )
-  mklink "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml" "%IBCP_CONF%service_routing.xml"
-REM 删除路由文件，并统一到IBCP_CONF目录
-  if exist "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml" (
-    del /q "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml"
+REM 删除前端配置，并统一到IBCP_CONF目录
+  if exist "%IBCP_DEPLOY%!name!\config.json" (
+    if not exist "%IBCP_CONF%config.json" copy /y "%IBCP_DEPLOY%!name!\config.json" "%IBCP_CONF%config.json"
+    del /q "%IBCP_DEPLOY%!name!\config.json"
+    mklink "%IBCP_DEPLOY%!name!\config.json" "%IBCP_CONF%config.json"
   )
-  mklink "%IBCP_DEPLOY%!name!\WEB-INF\service_routing.xml" "%IBCP_CONF%service_routing.xml"
 REM 统一日志目录到IBCP_LOG目录
   if not exist "%IBCP_DEPLOY%!name!\WEB-INF\log" (
     mklink /d "%IBCP_DEPLOY%!name!\WEB-INF\log" "%IBCP_LOG%"

@@ -9,10 +9,11 @@ echo '    2. 镜像创建标签格式为ibcp-all:当前时间。                
 echo '****************************************************************************'
 # 定义变量
 TAG=$(date +%s)
+NAME=ibas/ibcp-all
 
 echo 开始构建ibcp全模块容器镜像
 echo 镜像标签：ibcp-all:${TAG}
 # 调用docker build
-docker build --force-rm --rm --no-cache -f ./dockerfile4all -t ibcp-all:${TAG} ./
+docker build --force-rm --no-cache -f ./dockerfile4all -t ${NAME}:${TAG} ./
 
-echo 镜像构建完成，标签：ibcp-all:${TAG}
+echo 镜像构建完成，名称：${NAME}:${TAG}

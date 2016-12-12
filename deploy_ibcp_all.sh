@@ -93,6 +93,12 @@ while read file
       rm -f "${IBCP_DEPLOY}/${folder}/WEB-INF/service_routing.xml"
       ln -s "${IBCP_CONF}/service_routing.xml" "${IBCP_DEPLOY}/${folder}/WEB-INF/service_routing.xml"
     fi
+# 删除前端配置文件，并映射到统一位置
+    if [ -e "${IBCP_DEPLOY}/${folder}/config.json" ]; then
+      if [ ! -e "${IBCP_CONF}/config.json" ]; then cp -f "${IBCP_DEPLOY}/${folder}/config.json" "${IBCP_CONF}/config.json"; fi;
+      rm -f "${IBCP_DEPLOY}/${folder}/config.json"
+      ln -s "${IBCP_CONF}/config.json" "${IBCP_DEPLOY}/${folder}/config.json"
+    fi;
 # 映射日志文件夹到统一位置
     if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/log" ]; then rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF/log"; fi;
     ln -s -d "${IBCP_LOG}" "${IBCP_DEPLOY}/${folder}/WEB-INF/"
