@@ -94,6 +94,9 @@ RUN set -x \
 # 映射日志文件夹到统一位置
          if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/log" ]; then rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF/log"; fi; \
          ln -s -d "${IBCP_LOG}" "${IBCP_DEPLOY}/${folder}/WEB-INF/"; \
+# 映射数据文件夹到统一位置
+         if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/data" ]; then rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF/data"; fi; \
+         ln -s -d "${IBCP_DATA}" "${IBCP_DEPLOY}/${folder}/WEB-INF/"; \
 # 集中共享jar包
          if [ -e "${IBCP_LIB}" ]; then \
 # 复制模块jar包到ibcp共享目录
@@ -110,6 +113,8 @@ COPY "ibcp.app.xml" "${IBCP_CONF}/app.xml"
 COPY "ibcp.service_routing.xml" "${IBCP_CONF}/service_routing.xml"
 COPY "ibcp.catalina.properties" "${CATALINA_HOME}/conf/catalina.properties"
 # COPY "ibcp.server.xml" "${CATALINA_HOME}/conf/server.xml"
+COPY "ibcp.config.json" "${CATALINA_HOME}/conf/config.json"
+
 # 拷贝工具文件
 COPY "initialize_datastructures.sh" "${IBCP_PACKAGE_TOOLS}/"
 ADD "btulz.transforms.tar" "${IBCP_PACKAGE_TOOLS}/"

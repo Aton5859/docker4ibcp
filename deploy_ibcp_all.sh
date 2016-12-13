@@ -102,6 +102,9 @@ while read file
 # 映射日志文件夹到统一位置
     if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/log" ]; then rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF/log"; fi;
     ln -s -d "${IBCP_LOG}" "${IBCP_DEPLOY}/${folder}/WEB-INF/"
+# 映射数据文件夹到统一位置
+    if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/data" ]; then rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF/data"; fi;
+    ln -s -d "${IBCP_DATA}" "${IBCP_DEPLOY}/${folder}/WEB-INF/"
 # 集中共享jar包
     if [ -e "${IBCP_LIB}" ]
     then

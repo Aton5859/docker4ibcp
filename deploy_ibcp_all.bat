@@ -96,9 +96,11 @@ REM 删除前端配置，并统一到IBCP_CONF目录
     mklink "%IBCP_DEPLOY%!name!\config.json" "%IBCP_CONF%config.json"
   )
 REM 统一日志目录到IBCP_LOG目录
-  if not exist "%IBCP_DEPLOY%!name!\WEB-INF\log" (
-    mklink /d "%IBCP_DEPLOY%!name!\WEB-INF\log" "%IBCP_LOG%"
-  )
+  if exist "%IBCP_DEPLOY%!name!\WEB-INF\log" rd /s /q "%IBCP_DEPLOY%!name!\WEB-INF\log"
+  mklink /d "%IBCP_DEPLOY%!name!\WEB-INF\log" "%IBCP_LOG%"
+REM 统一数据目录到IBCP_DATA目录
+  if exist "%IBCP_DEPLOY%!name!\WEB-INF\data" rd /s /q "%IBCP_DEPLOY%!name!\WEB-INF\data"
+  mklink /d "%IBCP_DEPLOY%!name!\WEB-INF\data" "%IBCP_DATA%"
 REM 统一lib目录到运行目录
   if exist "%IBCP_DEPLOY%!name!\WEB-INF\lib\*.jar" (
     copy /y "%IBCP_DEPLOY%!name!\WEB-INF\lib\*.jar" "%IBCP_LIB%"

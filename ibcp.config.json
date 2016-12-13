@@ -1,0 +1,64 @@
+{
+    "configuration": {
+        "appSettings": [
+            {
+                "key": "language",
+                "value": "zh-CN"
+            },
+            {
+                "key": "login_user_code",
+                "value": "admin"
+            },
+            {
+                "key": "login_user_password",
+                "value": "1q2w3e"
+            },
+            {
+                "key": "sys_default_title",
+                "value": "全渠道管理系统"
+            },
+            {
+                "key": "criteria_result_count",
+                "value": "30"
+            },
+            {
+                "key": "table_visible_row_count_list",
+                "value": "15"
+            },
+            {
+                "key": "table_visible_row_count_choose",
+                "value": "6"
+            },
+            {
+                "key": "table_visible_row_count_details",
+                "value": "4"
+            },
+            {
+                "key": "config_item_refresh_not_read_message_interval",
+                "value": "5"
+            },
+            {
+                "key": "config_item_refresh_approval_request_interval",
+                "value": "5"
+            },
+            {
+                "key": "UI_Format_Decimal",
+                "value": "2"
+            }
+        ]
+    },
+    "styles": [
+        {
+            "key": "sap_goldreflection",
+            "value": "ui_sys_userlogonview_style_goldreflection"
+        },
+        {
+            "key": "sap_bluecrystal",
+            "value": "ui_sys_userlogonview_style_bluecrystal"
+        },
+        {
+            "key": "sap_hcb",
+            "value": "ui_sys_userlogonview_style_hcb"
+        }
+    ]
+}
