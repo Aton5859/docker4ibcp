@@ -1,0 +1,23 @@
+# ibcp全模块镜像
+# 基于nginx镜像的ibcp镜像
+# OS：debian:jessie
+FROM tomcat:8.5-jre8
+
+# 作者
+MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
+
+# 定义参数 
+# 程序包-发布服务地址
+ARG IBCP_PACKAGE_URL=http://ibas.club:8866/ibcp
+# 程序包-发布服务用户名
+ARG IBCP_PACKAGE_USER=avatech/\amber
+# 程序包-发布服务用户密码
+ARG IBCP_PACKAGE_PASSWORD=Aa123456
+# 程序包-版本路径
+ARG IBCP_PACKAGE_VERSION=latest
+# 程序包-下载目录
+ARG IBCP_PACKAGE_DOWNLOAD=./ibcp_packages
+# 程序包-工具目录
+ARG IBCP_PACKAGE_TOOLS=./ibcp_tools
+
+

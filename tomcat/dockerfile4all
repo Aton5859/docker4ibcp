@@ -52,13 +52,14 @@ COPY "ibcp.app.xml" "${IBCP_CONF}/app.xml"
 COPY "ibcp.service_routing.xml" "${IBCP_CONF}/service_routing.xml"
 COPY "ibcp.config.json" "${IBCP_CONF}/config.json"
 COPY "ibcp.catalina.properties" "${CATALINA_HOME}/conf/catalina.properties"
+COPY "ibcp.context.xml" "${CATALINA_HOME}/conf/context.xml"
 # COPY "ibcp.server.xml" "${CATALINA_HOME}/conf/server.xml"
 
 # 拷贝工具文件
 COPY "initialize_datastructures.sh" "${IBCP_PACKAGE_TOOLS}/"
 ADD "btulz.transforms.tar" "${IBCP_PACKAGE_TOOLS}/"
 # 修改脚本权限
-RUN chmod 775 "${IBCP_PACKAGE_TOOLS}/initialize_datastructures.sh"
+RUN chmod 755 "${IBCP_PACKAGE_TOOLS}/initialize_datastructures.sh"
 
 # 清理TOMCAT自带网站
 RUN rm -rf "${IBCP_DEPLOY}"; \
@@ -102,7 +103,7 @@ RUN set -x \
         if [ -e "${IBCP_DEPLOY}/${folder}/config.json" ]; then \
           if [ ! -e "${IBCP_CONF}/config.json" ]; then cp -f "${IBCP_DEPLOY}/${folder}/config.json" "${IBCP_CONF}/config.json"; fi; \
           rm -f "${IBCP_DEPLOY}/${folder}/config.json"; \
-          ln -P "${IBCP_CONF}/config.json" "${IBCP_DEPLOY}/${folder}/config.json"; \
+          ln -s "${IBCP_CONF}/config.json" "${IBCP_DEPLOY}/${folder}/config.json"; \
         fi; \
 # 映射日志文件夹到统一位置
          if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/log" ]; then rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF/log"; fi; \
