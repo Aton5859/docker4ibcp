@@ -111,9 +111,9 @@ RUN set -x \
 # 拷贝配置文件
 COPY "ibcp.app.xml" "${IBCP_CONF}/app.xml"
 COPY "ibcp.service_routing.xml" "${IBCP_CONF}/service_routing.xml"
+COPY "ibcp.config.json" "${IBCP_CONF}/config.json"
 COPY "ibcp.catalina.properties" "${CATALINA_HOME}/conf/catalina.properties"
 # COPY "ibcp.server.xml" "${CATALINA_HOME}/conf/server.xml"
-COPY "ibcp.config.json" "${CATALINA_HOME}/conf/config.json"
 
 # 拷贝工具文件
 COPY "initialize_datastructures.sh" "${IBCP_PACKAGE_TOOLS}/"
