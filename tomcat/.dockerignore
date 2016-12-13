@@ -1,0 +1,12 @@
+.git
+.vs
+.gitignore
+tmp
+temp
+LICENSE
+*.md
+*.gif
+*.bat
+*.zip
+build_dockerfile4all.sh
+deploy_ibcp_all.sh

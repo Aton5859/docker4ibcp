@@ -1,0 +1,10 @@
+.git
+.vs
+.gitignore
+tmp
+temp
+LICENSE
+*.md
+*.gif
+*.bat
+*.zip
