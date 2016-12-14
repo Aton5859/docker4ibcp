@@ -19,4 +19,51 @@ ARG IBCP_PACKAGE_DOWNLOAD=./ibcp_packages
 # 程序包-工具目录
 ARG IBCP_PACKAGE_TOOLS=./ibcp_tools
 
+# 定义环境变量
+ENV \
+# nginx目录
+    NGINX_HOME=/usr/share/nginx
+ENV \
+# ibcp部署目录
+    IBCP_DEPLOY=${NGINX_HOME}/webapps
+    
+# 初始化环境
+RUN mkdir -p "${IBCP_DEPLOY}";
+
+# 拷贝配置文件
+COPY "ibcp.nginx.conf" "/etc/nginx/nginx.conf"
+
+# 部署ibcp程序
+RUN set -x \
+# 下载ibcp的最新war包
+    && wget -r -np -nd -nv -P ${IBCP_PACKAGE_DOWNLOAD} --http-user=${IBCP_PACKAGE_USER} --http-password=${IBCP_PACKAGE_PASSWORD} ${IBCP_PACKAGE_URL}/${IBCP_PACKAGE_VERSION}/ \
+# 排序ibcp.deploy.order.txt，此文件为部署顺序说明。
+    && if [ ! -e "${IBCP_PACKAGE_DOWNLOAD}/ibcp.deploy.order.txt" ]; then \
+          ls -l "${IBCP_PACKAGE_DOWNLOAD}/*.war" | awk '//{print $NF}' >>"${IBCP_PACKAGE_DOWNLOAD}/ibcp.deploy.order.txt"; \
+       fi \
+# 释放war包
+    && (while read file; \
+       do \
+         file=${file%%.war*}.war; \
+         echo 释放"${IBCP_PACKAGE_DOWNLOAD}/${file}"; \
+# 修正war包的解压目录
+         folder=${file##*ibcp.}; \
+         folder=${folder%%.service*}; \
+# 记录释放的目录到ibcp.release.txt
+         if [ ! -e "${IBCP_DEPLOY}/ibcp.release.txt" ]; then :>"${IBCP_DEPLOY}/ibcp.release.txt"; fi; \
+         grep -q ${folder} "${IBCP_DEPLOY}/ibcp.release.txt" || echo "${folder}" >>"${IBCP_DEPLOY}/ibcp.release.txt"; \
+# 解压war包
+         unzip -o "${IBCP_PACKAGE_DOWNLOAD}/${file}" -d "${IBCP_DEPLOY}/${folder}"; \
+# 删除没用的文件
+         if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF" ]; then \
+           rm -rf "${IBCP_DEPLOY}/${folder}/WEB-INF"; \
+         fi; \
+         if [ -e "${IBCP_DEPLOY}/${folder}/META-INF" ]; then \
+           rm -rf "${IBCP_DEPLOY}/${folder}/META-INF"; \
+         fi; \
+       done < "${IBCP_PACKAGE_DOWNLOAD}/ibcp.deploy.order.txt" | sed 's/\r//g';) \
+# 删除下载的包
+    && rm -rf "${IBCP_PACKAGE_DOWNLOAD}" \
+# 调整权限
+    && chmod -R 777 "${IBCP_DEPLOY}"
 
