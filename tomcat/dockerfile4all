@@ -1,7 +1,6 @@
-# ibcp全模块镜像
 # 基于tomcat镜像的ibcp镜像
 # OS：debian:jessie
-FROM tomcat:8.5-jre8
+FROM colorcoding/tomcat
 
 # 作者
 MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
