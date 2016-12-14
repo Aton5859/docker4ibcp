@@ -124,6 +124,5 @@ RUN set -x \
 # 映射ibcp数据目录
 VOLUME ["${IBCP_HOME}"]
 
-# 运行tomcat
+# 设置工作目录
 WORKDIR "${CATALINA_HOME}"
-# CMD ["catalina.sh", "run"]

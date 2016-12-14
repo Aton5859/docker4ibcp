@@ -67,3 +67,5 @@ RUN set -x \
 # 调整权限
     && chmod -R 777 "${IBCP_DEPLOY}"
 
+# 设置工作目录
+WORKDIR "${NGINX_HOME}"
