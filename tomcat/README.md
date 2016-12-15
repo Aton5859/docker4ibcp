@@ -29,11 +29,11 @@ ibcp.context.xml                            tomcat内容配置，务必打开允
 * Windows环境下需要解压[wget](https://github.com/niurenzhu/docker4ibcp/blob/master/wget-win32.zip)并配置到PATH。
 
 ### 启动 | running
-* docker run --name ibcp-srv-db -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=1q2w3e mysql:5.7                 启动MYSQL容器
-* docker run --name=ibcp-srv-app-01 --link=ibcp-srv-db -p 8080:8080 -d ibcp-tomcat-all:1476945979       启动TOMCAT容器
-* docker exec -it ibcp-srv-app-01 ./ibcp_tools/initialize_datastructures.sh                             执行创建数据结构
-
-* 修改访问主机host：192.168.3.60    ibcp-srv-app
+```
+docker run --name ibcp-srv-db -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=1q2w3e mysql:5.7                             启动MYSQL容器
+docker run --name=ibcp-srv-app-01 --link=ibcp-srv-db:ibcp-srv-db -p 8080:8080 -d ibcp-tomcat-all:1476945979       启动TOMCAT容器，并连接MYSQL容器。
+docker exec -it ibcp-srv-app-01 ./ibcp_tools/initialize_datastructures.sh                                         执行创建数据结构
+```
 
 ### 鸣谢 | thanks
 [牛加人等于朱](http://baike.baidu.com/view/1769.htm "NiurenZhu")<br>
