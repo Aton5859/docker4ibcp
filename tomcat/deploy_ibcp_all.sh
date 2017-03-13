@@ -10,7 +10,8 @@ echo '    3. 参数2，IBCP的包位置，默认.\ibcp_packages。              
 echo '    4. 参数3，IBCP部署目录，默认.\webapps。                                          '
 echo '    5. 参数4，IBCP共享库目录，默认.\ibcp_lib。                                       '
 echo '    6. 脚本通文件链接方式，集中配置文件和日志目录到IBCP_HOME下。                     '
-echo '    7. 请调整catalina.properties的shared.loader="${catalina.home}/ibcp_lib/*.jar"。  '
+echo '    7. 请提前安装wget、unzip。                                                       '
+echo '    8. 请调整catalina.properties的shared.loader="${catalina.home}/ibcp_lib/*.jar"。  '
 echo '*************************************************************************************'
 # 定义变量
 # 工作目录
