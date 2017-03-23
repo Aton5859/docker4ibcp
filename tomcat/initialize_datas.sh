@@ -49,9 +49,9 @@ function initDatas()
 # 生成命令
   COMMOND="java \
     -jar ${TOOLS_TRANSFORM} init \
-    -data=${JarFile} \
-    -config=${Config} \
-    -classes=${Classes};"
+    ""-data=${JarFile}"" \
+    ""-config=${Config}"" \
+    ""-classes=${Classes}""";
   echo exec: ${COMMOND};
   eval $(echo ${COMMOND});
 }
@@ -71,36 +71,36 @@ do
 # 使用模块目录jar包
       if [ -e "${IBCP_DEPLOY}/${folder}/WEB-INF/lib" ]
       then
-        CLASSES=
+        FILE_CLASSES=
         for file in `ls "${IBCP_DEPLOY}/${folder}/WEB-INF/lib" | grep \..jar`
         do
-          CLASSES=${CLASSES}${file};
+          FILE_CLASSES=${FILE_CLASSES}${IBCP_DEPLOY}/${folder}/WEB-INF/lib/${file}\\\;;
         done
         for file in `ls "${IBCP_DEPLOY}/${folder}/WEB-INF/lib" | grep ibcp\.${folder}\-.`
         do
           echo ----${file}
           FILE_DATA=${IBCP_DEPLOY}/${folder}/WEB-INF/lib/${file}
-          initDatas ${FILE_DATA} ${FILE_APP} ${CLASSES};
+          initDatas "${FILE_DATA}" "${FILE_APP}" "${FILE_CLASSES}"
           echo ----
         done
       fi;
 # 使用共享目录jar包
       if [ -e "${IBCP_LIB}" ]
       then
-        CLASSES=
+        FILE_CLASSES=
         for file in `ls "${IBCP_LIB}" | grep \..jar`
         do
-          CLASSES=${CLASSES}${file};
+          FILE_CLASSES=${FILE_CLASSES}${IBCP_LIB}/${file}\\\;;
         done
         for file in `ls "${IBCP_LIB}" | grep ibcp\.${folder}\-.`
         do
           echo ----${file}
           FILE_DATA=${IBCP_LIB}/${file};
-          initDatas ${FILE_DATA} ${FILE_APP} ${CLASSES};
+          initDatas "${FILE_DATA}" "${FILE_APP}" "${FILE_CLASSES}"
           echo ----
         done
       fi;
     fi;
     echo --
-  done < "${IBCP_DEPLOY}/ibcp.release.txt" | sed 's/\r//g'
+  done < "${IBCP_DEPLOY}/ibcp.release.txt" | sed 's/\r//g' | sed 's/\n//g'
 echo 操作完成

@@ -21,7 +21,7 @@ REM 设置TOOLS目录
 SET TOOLS_FOLDER=%WORK_FOLDER%ibcp_tools\
 SET TOOLS_TRANSFORM=%TOOLS_FOLDER%btulz.transforms.bobas-0.1.0.jar
 if not exist "%TOOLS_TRANSFORM%" (
-  echo not found btulz.transforms.core.
+  echo not found btulz.transforms.bobas.
   goto :EOF
 )
 REM 设置DEPLOY目录
@@ -51,24 +51,24 @@ echo --开始处理[%%m]
 SET module=%%m
 SET jar=ibcp.!module!-*.jar
 if exist "%IBCP_DEPLOY%!module!\WEB-INF\app.xml" (
-  SET FILE_APP=%IBCP_DEPLOY%!module!\WEB-INF\app.xml   
+  SET FILE_APP=%IBCP_DEPLOY%!module!\WEB-INF\app.xml
   if exist "%IBCP_DEPLOY%!module!\WEB-INF\lib\!jar!" (
     echo ----开始处理[.\WEB-INF\lib\!jar!]
-	SET CLASSES=
-	for %%f in (%IBCP_DEPLOY%!module!\WEB-INF\lib\*.jar) DO (
-       SET CLASSES=!CLASSES!%%f;
+    SET FILE_CLASSES=
+    for %%f in (%IBCP_DEPLOY%!module!\WEB-INF\lib\*.jar) DO (
+       SET "FILE_CLASSES=!FILE_CLASSES!%%f;"
     )
     for %%f in (%IBCP_DEPLOY%!module!\WEB-INF\lib\!jar!) DO (
-       call :INIT_DATA %%f !FILE_APP! !CLASSES!
+       call :INIT_DATA "%%f" "!FILE_APP!" "!FILE_CLASSES!"
   ))
   if exist "%IBCP_LIB%!jar!" (
     echo ----开始处理[%IBCP_LIB%!jar!]
-	SET CLASSES=
-	for %%f in (%IBCP_LIB%*.jar) DO (
-       SET CLASSES=!CLASSES!%%f;
+    SET FILE_CLASSES=
+    for %%f in (%IBCP_LIB%*.jar) DO (
+       SET "FILE_CLASSES=!FILE_CLASSES!%%f;"
     )
     for %%f in (%IBCP_LIB%!jar!) DO (
-       call :INIT_DATA %%f !FILE_APP! !CLASSES!
+       call :INIT_DATA "%%f" "!FILE_APP!" "!FILE_CLASSES!"
   ))
 )
 echo --
@@ -83,9 +83,9 @@ REM 函数，初始化数据。参数1，分析的jar包 参数2，配置文件 参数3，加载的类库
   SET Classes=%3
   SET COMMOND=java ^
     -jar "%TOOLS_TRANSFORM%" init^
-    -data="%JarFile%"^
+    -data=%JarFile%^
     -config=%Config%^
-    -classes=%Classes%^
+    -classes=%Classes%
   echo 运行：%COMMOND%
   call %COMMOND%
 goto :EOF
