@@ -99,6 +99,14 @@ function createDS()
 {
 # 参数1，使用的jar包
   JarFile=$1;
+  if [[ $MasterDbServer == *:* ]];then
+# 如果服务器地址包含端口，则使用此端口
+    tmpMasterDbPort=${MasterDbServer##*:};
+    if [ -n "${tmpMasterDbPort}" ];then
+      MasterDbPort=${tmpMasterDbPort};
+      MasterDbServer=${MasterDbServer%:*};
+    fi;
+  fi;
   COMMOND="java \
     -jar ${TOOLS_TRANSFORM} dsJar \
     -DsTemplate=ds_${MasterDbType}_ibas_classic.xml \

@@ -81,6 +81,13 @@ goto :EOF
 REM 函数，创建数据结构。参数1，分析的jar包
 :CREATE_DS
   SET JarFile=%1
+  echo %MasterDbServer%
+  for /f "tokens=1,2 delims=: " %%a in ('echo %MasterDbServer%') do (
+    if "%%a" neq "%MasterDbServer%" (
+      SET MasterDbServer=%%a
+      SET MasterDbPort=%%b
+    )
+  )
   SET COMMOND=java ^
     -jar "%TOOLS_TRANSFORM%" dsJar^
     -DsTemplate=ds_%MasterDbType%_ibas_classic.xml^
